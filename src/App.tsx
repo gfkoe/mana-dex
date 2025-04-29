@@ -4,13 +4,17 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import Header from "./components/Header";
 import ManaForm from "./components/ManaForm";
+import OutputBox from "./components/OutputBox";
 
 function App() {
   return (
     <>
       <Header />
       <main>
-        <ManaForm />
+        <div className="flex justify-center items-center">
+          <ManaForm />
+          <OutputBox />
+        </div>
       </main>
     </>
   );
