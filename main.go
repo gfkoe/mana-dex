@@ -4,8 +4,22 @@ import (
 	"net/http"
 )
 
-type APIResponse struct {
-	Message string `json:"message"`
+type RequestBody struct {
+	Colors []string `json:"colors"`
+	Types  []string `json:"types"`
+}
+
+var colorMap = map[string]string{
+	"White": "produces:w",
+	"Blue":  "produces:u",
+	"Black": "produces:b",
+	"Red":   "produces:r",
+	"Green": "produces:g",
+}
+
+var typeMap = map[string]string{
+	"Fetch": "is:fetchland",
+	"Tango": "otag:cycle-tango-land",
 }
 
 func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
