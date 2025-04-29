@@ -20,6 +20,18 @@ var colorMap = map[string]string{
 var typeMap = map[string]string{
 	"Fetch": "is:fetchland",
 	"Tango": "otag:cycle-tango-land",
+	*Shock - otag:shock-land
+*Triomes - is:triland
+*Surveil - otag:cycle-dual-surveil-land
+*Cycling - otag:cycle-akh-dual-cycling-land
+Verge - otag:cycle-verge
+Bond - otag:cycle-bbd-dual-land
+Pain - otag:cycle-pain-land
+Horizon - otag:cycle-horizon-land
+Check - otag:cycle-check-land
+Slow - otag:cycle-slow-land
+Gates - otag:cycle-clb-thriving-gate
+Thriving - otag:cycle-jmp-thriving-land
 }
 
 func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
