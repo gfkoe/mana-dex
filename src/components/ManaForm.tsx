@@ -46,16 +46,29 @@ function ManaForm() {
     return items.length === selected.length;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const request = {
+      colors: selectedColors,
+      landTypes: selectedLandTypes,
+    };
+    try {
+      const res = await fetch("http://localhost:8080/api/lands", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
-    <form
-      action="localhost:8080/api/getlands"
-      method="GET"
-      className="flex flex-col gap-8 max-w-md"
-    >
+    <form className="flex flex-col gap-8 max-w-md">
       {/* Color Identity Section */}
       <div>
         <div className="flex gap-2 items-center mb-2">

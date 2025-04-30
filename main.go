@@ -1,8 +1,11 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"strings"
 )
 
 type RequestBody struct {
@@ -37,8 +40,32 @@ var typeMap = map[string]string{
 }
 
 func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
-	// Fetch the lands from Scryfall API
-	resp, err := http.Get("https://api.scryfall.com/cards/search?q=type:land")
+
+	var req RequestBody
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var options []string
+	for _, color := range req.Colors {
+
+		if query, ok := colorMap[color]; ok {
+			options = append(options, query)
+		}
+	}
+
+	for _, t := range req.Types {
+
+		if query, ok := typeMap[t]; ok {
+			options = append(options, query)
+		}
+	}
+
+	query := strings.Join(options, "+")
+	url := fmt.Sprintf("https://api.scryfall.com/cards/search?q=%s", query)
+	resp, err := http.Get(url)
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -47,6 +74,9 @@ func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(resp.StatusCode)
 	// _, _ = w.ReadFrom(resp.Body)
+	fmt.Println("Fetched lands from Scryfall API")
+	body, _ := io.ReadAll(resp.Body)
+	w.Write(body)
 }
 
 func main() {
