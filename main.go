@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -10,28 +11,29 @@ type RequestBody struct {
 }
 
 var colorMap = map[string]string{
-	"White": "produces:w",
-	"Blue":  "produces:u",
-	"Black": "produces:b",
-	"Red":   "produces:r",
-	"Green": "produces:g",
+	"White": "produces%3ACw",
+	"Blue":  "produces%3ACu",
+	"Black": "produces%3ACb",
+	"Red":   "produces%3ACr",
+	"Green": "produces%3ACg",
 }
 
 var typeMap = map[string]string{
-	"Fetch": "is:fetchland",
-	"Tango": "otag:cycle-tango-land",
-	*Shock - otag:shock-land
-*Triomes - is:triland
-*Surveil - otag:cycle-dual-surveil-land
-*Cycling - otag:cycle-akh-dual-cycling-land
-Verge - otag:cycle-verge
-Bond - otag:cycle-bbd-dual-land
-Pain - otag:cycle-pain-land
-Horizon - otag:cycle-horizon-land
-Check - otag:cycle-check-land
-Slow - otag:cycle-slow-land
-Gates - otag:cycle-clb-thriving-gate
-Thriving - otag:cycle-jmp-thriving-land
+	"Fetch":    "is%3ACfetchland",
+	"Tango":    "otag%3ACcycle-tango-land",
+	"Shock":    "otag%3ACshock-land",
+	"Triomes":  "is%3ACtriland",
+	"Surveil":  "otag%3ACcycle-dual-surveil-land",
+	"Cycling":  "otag%3ACcycle-akh-dual-cycling-land",
+	"Verge":    "otag%3ACcycle-verge",
+	"Bond":     "otag%3ACcycle-bbd-dual-land",
+	"Pain":     "otag%3ACcycle-pain-land",
+	"Horizon":  "otag%3ACcycle-horizon-land",
+	"Check":    "otag%3ACcycle-check-land",
+	"Slow":     "otag%3ACcycle-slow-land",
+	"Gates":    "otag%3ACcycle-clb-thriving-gate",
+	"Thriving": "otag%3ACcycle-jmp-thriving-land",
+	"Other":    "exotic+orchard+or+spire+of+industry+or+mana+confluence+or+city+of+brass+or+evolving+wilds+or+terramorphic+expanse+or+myriad+landscape+or+fabled+passage",
 }
 
 func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
@@ -49,5 +51,6 @@ func fetchScryfallLands(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/api/lands", fetchScryfallLands)
+	fmt.Println("Server is running on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
