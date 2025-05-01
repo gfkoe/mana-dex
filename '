@@ -52,7 +52,6 @@ function ManaForm() {
       colors: selectedColors,
       landTypes: selectedLandTypes,
     };
-    console.log(request);
     try {
       const res = await fetch("/api/lands", {
         method: "POST",
