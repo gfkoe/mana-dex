@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -14,29 +15,29 @@ type RequestBody struct {
 }
 
 var colorMap = map[string]string{
-	"white": "produces%3Aw",
-	"blue":  "produces%3Au",
-	"black": "produces%3Ab",
-	"red":   "produces%3Ar",
-	"green": "produces%3Ag",
+	"white": "t:land !\"plains\" or produces:w t:land",
+	"blue":  "t:land !\"island\" or produces:u t:land",
+	"black": "t:land !\"swamp\" or produces:b t:land",
+	"red":   "t:land !\"mountain\" or produces:r t:land",
+	"green": "t:land !\"forest\" or produces:g t:land",
 }
 
 var typeMap = map[string]string{
-	"fetch":    "is%3Afetchland",
-	"tango":    "otag%3Acycle-tango-land",
-	"shock":    "otag%3Ashock-land",
-	"triomes":  "is%3Atriland",
-	"surveil":  "otag%3Acycle-dual-surveil-land",
-	"cycling":  "otag%3Acycle-akh-dual-cycling-land",
-	"verge":    "otag%3Acycle-verge",
-	"bond":     "otag%3Acycle-bbd-dual-land",
-	"pain":     "otag%3Acycle-pain-land",
-	"horizon":  "otag%3Acycle-horizon-land",
-	"check":    "otag%3Acycle-check-land",
-	"slow":     "otag%3Acycle-slow-land",
-	"gates":    "otag%3Acycle-clb-thriving-gate",
-	"thriving": "otag%3Acycle-jmp-thriving-land",
-	"other":    "exotic+orchard+or+spire+of+industry+or+mana+confluence+or+city+of+brass+or+evolving+wilds+or+terramorphic+expanse+or+myriad+landscape+or+fabled+passage",
+	"fetch":    "is:fetchland",
+	"tango":    "otag:cycle-tango-land",
+	"shock":    "otag:shock-land",
+	"triomes":  "is:triland",
+	"surveil":  "otag:cycle-dual-surveil-land",
+	"cycling":  "otag:cycle-akh-dual-cycling-land",
+	"verge":    "otag:cycle-verge",
+	"bond":     "otag:cycle-bbd-dual-land",
+	"pain":     "otag:cycle-pain-land",
+	"horizon":  "otag:cycle-horizon-land",
+	"check":    "otag:cycle-check-land",
+	"slow":     "otag:cycle-slow-land",
+	"gates":    "otag:cycle-clb-thriving-gate",
+	"thriving": "otag:cycle-jmp-thriving-land",
+	"rainbow":  "exotic orchard or spire of industry or mana confluence or city of brass or evolving wilds or terramorphic expanse or myriad landscape or fabled passage",
 }
 
 func fetchLands(w http.ResponseWriter, r *http.Request) {
@@ -45,10 +46,6 @@ func fetchLands(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println("Request:", req)
-
-	fmt.Println("Colors:", req.Colors)
-	fmt.Println("Land Types:", req.LandTypes)
 
 	var options []string
 	for _, color := range req.Colors {
@@ -65,11 +62,14 @@ func fetchLands(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	query := strings.Join(options, "+")
+	query := strings.Join(options, " ")
 	fmt.Println("Query:", query)
-	url := fmt.Sprintf("https://api.scryfall.com/cards/search?q=%s", query)
-	fmt.Println("URL:", url)
-	resp, err := http.Get(url)
+	baseUrl, _ := url.Parse("https://api.scryfall.com/cards/search")
+	params := url.Values{}
+	params.Add("q", query)
+	baseUrl.RawQuery = params.Encode()
+	fmt.Println("URL:", baseUrl.String())
+	resp, err := http.Get(baseUrl.String())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -17,7 +17,7 @@ const landTypes = [
   "rainbow",
 ];
 
-function ManaForm() {
+function ManaForm({ setOutput }: { setOutput: (text: string) => void }) {
   const [selectedColors, setSelectedColors] = useState<string[]>(colors);
   const [selectedLandTypes, setSelectedLandTypes] =
     useState<string[]>(landTypes);
@@ -62,7 +62,10 @@ function ManaForm() {
         body: JSON.stringify(request),
       });
       const data = await res.json();
-      console.log(data);
+      const landNames = data.data
+        .map((land: { name: string }) => land.name)
+        .join("\n");
+      setOutput(landNames || "No lands found");
     } catch (error) {
       console.error("Error:", error);
     }
