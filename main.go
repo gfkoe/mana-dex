@@ -14,17 +14,25 @@ type RequestBody struct {
 	LandTypes []string `json:"landTypes"`
 }
 
+var basicLands = map[string]string{
+	"white": "plains",
+	"blue":  "island",
+	"black": "swamp",
+	"red":   "mountain",
+	"green": "forest",
+}
+
 var colorMap = map[string]string{
-	"white": "t:land !\"plains\" or produces:w t:land",
-	"blue":  "t:land !\"island\" or produces:u t:land",
-	"black": "t:land !\"swamp\" or produces:b t:land",
-	"red":   "t:land !\"mountain\" or produces:r t:land",
-	"green": "t:land !\"forest\" or produces:g t:land",
+	"white": "w",
+	"blue":  "u",
+	"black": "b",
+	"red":   "r",
+	"green": "g",
 }
 
 var typeMap = map[string]string{
 	"fetch":    "is:fetchland",
-	"tango":    "otag:cycle-tango-land",
+	"tango":    "is:tangoland",
 	"shock":    "otag:shock-land",
 	"triomes":  "is:triland",
 	"surveil":  "otag:cycle-dual-surveil-land",
@@ -48,21 +56,33 @@ func fetchLands(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var options []string
-	for _, color := range req.Colors {
-		fmt.Println(color)
-		if query, ok := colorMap[color]; ok {
-			options = append(options, query)
-		}
-	}
 
 	for _, t := range req.LandTypes {
 		fmt.Println(t)
-		if query, ok := typeMap[t]; ok {
-			options = append(options, query)
+		if lt, ok := typeMap[t]; ok {
+			if t == "fetch" {
+				for _, color := range req.Colors {
+					if basic, ok := basicLands[color]; ok {
+						options = append(options, fmt.Sprintf("%s o:%s", lt, basic))
+					}
+				}
+			} else if t == "rainbow" {
+				options = append(options, fmt.Sprintf("%s", lt))
+			} else {
+				for _, color := range req.Colors {
+					options = append(options, fmt.Sprintf("%s produces:%s", lt, string(color)))
+				}
+			}
 		}
 	}
 
-	query := strings.Join(options, " ")
+	for _, color := range req.Colors {
+		if basic, ok := basicLands[color]; ok {
+			options = append(options, fmt.Sprintf("!\" %s\"", basic))
+		}
+	}
+
+	query := strings.Join(options, " or ")
 	fmt.Println("Query:", query)
 	baseUrl, _ := url.Parse("https://api.scryfall.com/cards/search")
 	params := url.Values{}

@@ -73,7 +73,6 @@ function ManaForm({ setOutput }: { setOutput: (text: string) => void }) {
 
   return (
     <form className="flex flex-col gap-8 max-w-md">
-      {/* Color Identity Section */}
       <div>
         <div className="flex gap-2 items-center mb-2">
           <h2 className="text-lg font-semibold">Color Identity</h2>
@@ -92,7 +91,7 @@ function ManaForm({ setOutput }: { setOutput: (text: string) => void }) {
           {colors.map((color) => (
             <label
               key={color}
-              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-500"
+              className="flex items-center gap-2 px-3 py-1 cursor-pointer"
             >
               <input
                 type="checkbox"
@@ -133,7 +132,7 @@ function ManaForm({ setOutput }: { setOutput: (text: string) => void }) {
           {landTypes.map((type) => (
             <label
               key={type}
-              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-500"
+              className="flex items-center gap-2 px-3 py-1 cursor-pointer"
             >
               <input
                 type="checkbox"

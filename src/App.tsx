@@ -1,6 +1,4 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import Header from "./components/Header";
 import ManaForm from "./components/ManaForm";
@@ -12,9 +10,13 @@ function App() {
     <>
       <Header />
       <main>
-        <div className="flex justify-center items-center">
-          <ManaForm setOutput={setOutput} />
-          <OutputBox text={output} />
+        <div className="flex justify-center items-stretch">
+          <div className="w-1/2">
+            <ManaForm setOutput={setOutput} />
+          </div>
+          <div className="w-1/2 flex">
+            <OutputBox text={output} />
+          </div>
         </div>
       </main>
     </>
