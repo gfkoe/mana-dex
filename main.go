@@ -78,7 +78,7 @@ func fetchLands(w http.ResponseWriter, r *http.Request) {
 
 	for _, color := range req.Colors {
 		if basic, ok := basicLands[color]; ok {
-			options = append(options, fmt.Sprintf("!\" %s\"", basic))
+			options = append(options, fmt.Sprintf("!\"%s\"", basic))
 		}
 	}
 
