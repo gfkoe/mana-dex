@@ -9,12 +9,12 @@ function App() {
   return (
     <>
       <Header />
-      <main>
-        <div className="flex justify-center items-stretch">
+      <main className="gap-y-6">
+        <div className="flex justify-center items-stretch gap-x-2">
           <div className="w-1/2">
             <ManaForm setOutput={setOutput} />
           </div>
-          <div className="w-1/2 flex">
+          <div className="w-1/2 flex flex-col">
             <OutputBox text={output} />
           </div>
         </div>
